@@ -15,10 +15,15 @@ class TocMachine(GraphMachine):
         self.is_right_box_open = 0
         self.is_back_picture_open = 0
         self.number_of_turns = 0
+        self.number_of_open = 0
+
+    def is_open_door(self, event):
+        text = event.message.text
+        return text.lower() == "開門"
 
     def is_restart(self, event):
         text = event.message.text
-        return text.lower() == "restart"
+        return text.lower() == "restart" or text.lower() == "重新開始"
 
     def is_going_to_front(self, event):
         text = event.message.text
@@ -51,8 +56,6 @@ class TocMachine(GraphMachine):
 
     def is_going_to_front_door(self, event):
         text = event.message.text
-        if self.is_front_door_open == 1:
-            return False 
         return text.lower() == "調查門"
 
     def is_going_to_front_window(self, event):
@@ -61,8 +64,6 @@ class TocMachine(GraphMachine):
 
     def is_going_to_left_safe(self, event):
         text = event.message.text
-        if self.is_left_safe_open == 1:
-            return False 
         return text.lower() == "調查保險箱"
 
     def is_going_to_left_wall(self, event):
@@ -71,14 +72,10 @@ class TocMachine(GraphMachine):
 
     def is_going_to_right_bag(self, event):
         text = event.message.text
-        if self.is_right_bag_open == 1:
-            return False 
         return text.lower() == "調查黑色書包"
 
     def is_going_to_right_box(self, event):
         text = event.message.text
-        if self.is_right_box_open == 1:
-            return False 
         return text.lower() == "調查橘色箱子"
 
     def is_going_to_back_picture(self, event):
@@ -87,8 +84,6 @@ class TocMachine(GraphMachine):
 
     def is_going_to_back_calendar(self, event):
         text = event.message.text
-        if self.is_back_calendar_open == 1:
-            return False 
         return text.lower() == "調查月曆"
 
     def is_going_to_back_book(self, event):
@@ -97,13 +92,19 @@ class TocMachine(GraphMachine):
 
     def is_front_door_correct(self, event):
         text = event.message.text
-        if text.lower() == "000000":   # 改
+        if self.is_front_door_open == 1:
+            return False
+        self.number_of_open += 1
+        if text.lower() == "3765":
             self.is_front_door_open = 1
             return True
         return False
 
     def is_left_safe_correct(self, event):
         text = event.message.text
+        if self.is_left_safe_open == 1:
+            return False
+        self.number_of_open += 1
         if text.lower() == "3742":
             self.is_left_safe_open = 1
             return True
@@ -111,6 +112,9 @@ class TocMachine(GraphMachine):
 
     def is_right_bag_correct(self, event):
         text = event.message.text
+        if self.is_right_bag_open == 1:
+            return False
+        self.number_of_open += 1
         if text.lower() == "319":
             self.is_right_bag_open = 1
             return True
@@ -118,6 +122,9 @@ class TocMachine(GraphMachine):
 
     def is_right_box_correct(self, event):
         text = event.message.text
+        if self.is_right_box_open == 1:
+            return False
+        self.number_of_open += 1
         if text.lower() == "6928":
             self.is_right_box_open = 1
             return True
@@ -125,6 +132,9 @@ class TocMachine(GraphMachine):
 
     def is_back_picture_correct(self, event):
         text = event.message.text
+        if self.is_back_picture_open == 1:
+            return False
+        self.number_of_open += 1
         if text.lower() == "705":
             self.is_back_picture_open = 1
             return True
@@ -133,11 +143,11 @@ class TocMachine(GraphMachine):
     def on_enter_start(self, event):
         # initial
         self.mode = 0
-        self.front_door_open = 0
-        self.left_safe_open = 0
-        self.right_bag_open = 0
-        self.right_box_open = 0
-        self.back_picture_open = 0
+        self.is_front_door_open = 0
+        self.is_left_safe_open = 0
+        self.is_right_bag_open = 0
+        self.is_right_box_open = 0
+        self.is_back_picture_open = 0
         self.number_of_turns = 0
 
         print("I'm entering start")
@@ -181,6 +191,17 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/qQi8w2'
+        if(self.is_front_door_open == 1):
+            self.mode = 0
+            title = '門打開了。'
+            text = '終於可以回家了！'
+            url = 'https://img.onl/TKiloZ'
+            btn = [
+            MessageTemplateAction(
+                label = '開門',
+                text = '開門'
+            )
+        ]
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_enter_front_window(self, event):
@@ -225,6 +246,11 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/sgfyx'
+        if(self.is_left_safe_open == 1):
+            self.mode = 0
+            title = '保險箱打開了'
+            text = '裡面有一些鉛筆。'
+            url = 'https://img.onl/A9Sm3'
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_enter_left_wall(self, event):
@@ -269,6 +295,11 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/IbazTb'
+        if(self.is_right_bag_open == 1):
+            self.mode = 0
+            title = '黑色書包打開了。'
+            text = '裡面是一些鉛筆。\n……有必要上鎖嗎?'
+            url = 'https://img.onl/DqgUl5'
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_enter_right_box(self, event):
@@ -283,6 +314,11 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/CjQw7'
+        if(self.is_right_box_open == 1):
+            self.mode = 0
+            title = '橘色箱子打開了'
+            text = '裡面有一些鉛筆。'
+            url = 'https://img.onl/vvFJsr'
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_enter_back(self, event):
@@ -318,6 +354,11 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/ZwBAa9'
+        if(self.is_back_picture_open == 1):
+            self.mode = 0
+            title = '牆裡的盒子打開了'
+            text = '裡面是一些鉛筆。'
+            url = 'https://img.onl/eqy9t'
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_enter_back_calendar(self, event):
@@ -344,6 +385,19 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/wi0Tab'
+        send_button_message(event.reply_token, title, text, btn, url)
+
+    def on_enter_clearance(self, event):
+        print("I'm entering clearance")
+        title = '離開學校啦！'
+        text = '獲得成就:暈頭轉向\n(你總共轉了'+str(self.number_of_turns)+'次)\n獲得成就:解碼達人ˊ\n(你總共嘗試了'+str(self.number_of_open)+'次密碼)'
+        btn = [
+            MessageTemplateAction(
+                label = '重新開始',
+                text ='重新開始'
+            )
+        ]
+        url = 'https://img.onl/ZKN0of'
         send_button_message(event.reply_token, title, text, btn, url)
 
     def on_exit_start(self, event):

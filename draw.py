@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import networkx as nx
 import os
 import sys
 
@@ -15,11 +17,10 @@ load_dotenv()
 
 machine = TocMachine(
     states=["start", "front", "left", "right", "back", 
-            "front_door", "front_window",
-            "left_safe", "left_wall",
-            "right_bag", "right_box",
-            "back_picture", "back_calendar", "back_book",
-            "clearance"],
+            "front_door", "front_window", "front_door_open",
+            "left_safe", "left_wall", "left_safe_open",
+            "right_bag", "right_box", "right_bag_open", "right_box_open",
+            "back_picture", "back_calendar", "back_book", "back_picture_open"],
     transitions=[
         # start->
         {
@@ -77,19 +78,6 @@ machine = TocMachine(
             "dest": "front",
             "conditions": "is_going_back",
         },
-        # front_door
-        {
-            "trigger": "advance",
-            "source": "front_door",
-            "dest": "front_door",
-            "conditions": "is_front_door_correct",
-        },
-        {
-            "trigger": "advance",
-            "source": "front_door",
-            "dest": "clearance",
-            "conditions": "is_open_door",
-        },
         # left->
         {
             "trigger": "advance",
@@ -134,13 +122,6 @@ machine = TocMachine(
             "dest": "left",
             "conditions": "is_going_back",
         },
-        # left_safe
-        {
-            "trigger": "advance",
-            "source": "left_safe",
-            "dest": "left_safe",
-            "conditions": "is_left_safe_correct",
-        },
         # right->
         {
             "trigger": "advance",
@@ -184,19 +165,6 @@ machine = TocMachine(
             "source": "right_box",
             "dest": "right",
             "conditions": "is_going_back",
-        },
-        # right_bag right_box
-        {
-            "trigger": "advance",
-            "source": "right_bag",
-            "dest": "right_bag",
-            "conditions": "is_right_bag_correct",
-        },
-        {
-            "trigger": "advance",
-            "source": "right_box",
-            "dest": "right_box",
-            "conditions": "is_right_box_correct",
         },
         # back->
         {
@@ -254,22 +222,14 @@ machine = TocMachine(
             "dest": "back",
             "conditions": "is_going_back",
         },
-        # back_picture
-        {
-            "trigger": "advance",
-            "source": "back_picture",
-            "dest": "back_picture",
-            "conditions": "is_back_picture_correct",
-        },
         # restart
         {
             "trigger": "advance",
             "source": ["start", "front", "left", "right", "back", 
-            "front_door", "front_window",
-            "left_safe", "left_wall",
-            "right_bag", "right_box",
-            "back_picture", "back_calendar", "back_book",
-            "clearance"],
+            "front_door", "front_window", "front_door_open",
+            "left_safe", "left_wall", "left_safe_open"
+            "right_bag", "right_box", "right_bag_open", "right_box_open",
+            "back_picture", "back_calendar", "back_book", "back_picture_open"],  # 要改
             "dest": "start",
             "conditions": "is_restart",
         }
@@ -279,90 +239,23 @@ machine = TocMachine(
     auto_transitions=False,
     show_conditions=True,
 )
+states = machine.get_state()
+transitions = machine.transitions
+# 建立圖形
+G = nx.DiGraph()
 
-app = Flask(__name__, static_url_path="")
+# 將狀態加入圖形
+G.add_nodes_from(machine.states)
 
+# 將轉移加入圖形
+for transition in machine.transitions:
+    G.add_edge(transition["source"], transition["dest"], label=transition["trigger"])
 
-# get channel_secret and channel_access_token from your environment variable
-channel_secret = os.getenv("LINE_CHANNEL_SECRET", None)
-channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
-if channel_secret is None:
-    print("Specify LINE_CHANNEL_SECRET as environment variable.")
-    sys.exit(1)
-if channel_access_token is None:
-    print("Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.")
-    sys.exit(1)
+# 繪製圖形
+pos = nx.drawing.nx_agraph.pyplot_layout(G, prog="dot")
+nx.draw(G, pos, with_labels=True, arrows=True)
+edge_labels = {(u, v): d["label"] for u, v, d in G.edges(data=True)}
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
-line_bot_api = LineBotApi(channel_access_token)
-parser = WebhookParser(channel_secret)
-#machine.get_graph().draw("fsm.png", prog="dot", format="png")
-#send_file("fsm.png", mimetype="image/png")
-
-# @app.route("/callback", methods=["POST"])
-# def callback():
-#     signature = request.headers["X-Line-Signature"]
-#     # get request body as text
-#     body = request.get_data(as_text=True)
-#     app.logger.info("Request body: " + body)
-
-#     # parse webhook body
-#     try:
-#         events = parser.parse(body, signature)
-#     except InvalidSignatureError:
-#         abort(400)
-
-#     # if event is MessageEvent and message is TextMessage, then echo text
-#     for event in events:
-#         if not isinstance(event, MessageEvent):
-#             continue
-#         if not isinstance(event.message, TextMessage):
-#             continue
-
-#         line_bot_api.reply_message(
-#             event.reply_token, TextSendMessage(text=event.message.text)
-#         )
-
-#     return "OK"
-
-
-@app.route("/webhook", methods=["POST"])
-def webhook_handler():
-    signature = request.headers["X-Line-Signature"]
-    # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info(f"Request body: {body}")
-
-    # parse webhook body
-    try:
-        events = parser.parse(body, signature)
-    except InvalidSignatureError:
-        abort(400)
-
-    # if event is MessageEvent and message is TextMessage, then echo text
-    for event in events:
-        if not isinstance(event, MessageEvent):
-            continue
-        if not isinstance(event.message, TextMessage):
-            continue
-        if not isinstance(event.message.text, str):
-            continue
-        print(f"\nFSM STATE: {machine.state}")
-        print(f"REQUEST BODY: \n{body}")
-        response = machine.advance(event)
-        if response == False:
-            if machine.mode == 0:
-                send_text_message(event.reply_token, "請按按鈕或正確的輸入")
-            else:
-                send_text_message(event.reply_token, "密碼錯誤")
-    return "OK"
-
-
-@app.route("/show-fsm", methods=["GET"])
-def show_fsm():
-    machine.get_graph().draw("fsm.png", prog="dot", format="png")
-    return send_file("fsm.png", mimetype="image/png")
-
-
-if __name__ == "__main__":
-    port = os.environ.get("PORT", 8000)
-    app.run(host="0.0.0.0", port=port, debug=True)
+# 顯示圖形
+plt.show()
