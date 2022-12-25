@@ -55,12 +55,6 @@ python3 app.py
 ## FSM
 ![]()
 
-["start", "front", "left", "right", "back", 
-            "front_door", "front_window",
-            "left_safe", "left_wall",
-            "right_bag", "right_box",
-            "back_picture", "back_calendar", "back_book",
-            "clearance"]
 ### state說明
 - start: 按下按鈕開始遊戲
 - front: 顯示前方的牆壁，按下按鈕查看物品
