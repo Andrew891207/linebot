@@ -17,9 +17,16 @@ class TocMachine(GraphMachine):
         self.number_of_turns = 0
         self.number_of_open = 0
 
+    def print_origin(self, event):
+        reply_token = event.reply_token
+        send_text_message(reply_token, "原作網址:https://t.co/UkHWBXXYQC")
+
     def is_open_door(self, event):
         text = event.message.text
-        return text.lower() == "開門"
+        if text.lower() == "開門":
+            return True
+        return False
+        
 
     def is_restart(self, event):
         text = event.message.text
@@ -149,6 +156,7 @@ class TocMachine(GraphMachine):
         self.is_right_box_open = 0
         self.is_back_picture_open = 0
         self.number_of_turns = 0
+        self.number_of_open = 0
 
         print("I'm entering start")
         title = '密室逃脫'
@@ -390,7 +398,10 @@ class TocMachine(GraphMachine):
     def on_enter_clearance(self, event):
         print("I'm entering clearance")
         title = '離開學校啦！'
-        text = '獲得成就:暈頭轉向\n(你總共轉了'+str(self.number_of_turns)+'次)\n獲得成就:解碼達人ˊ\n(你總共嘗試了'+str(self.number_of_open)+'次密碼)'
+        s = '獲得成就:暈頭轉向\n(你總共轉了'+str(self.number_of_turns)
+        s += '次)\n獲得成就:解碼達人ˊ\n(你總共嘗試了'
+        s += str(self.number_of_open)
+        s += '次密碼)'
         btn = [
             MessageTemplateAction(
                 label = '重新開始',
@@ -398,7 +409,7 @@ class TocMachine(GraphMachine):
             )
         ]
         url = 'https://img.onl/ZKN0of'
-        send_button_message(event.reply_token, title, text, btn, url)
+        send_button_message(event.reply_token, title, s, btn, url)
 
     def on_exit_start(self, event):
         print("Leaving start")
@@ -434,7 +445,7 @@ class TocMachine(GraphMachine):
     def on_exit_back_picture(self, event):
         self.mode = 0
         print("Leaving back_picture")
-
+    
     
 
     
