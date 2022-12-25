@@ -45,17 +45,17 @@ python3 app.py
 
 ## 使用示範
 ### 開始
-    ![](https://img.onl/LT4tak)
+![](https://img.onl/LT4tak)
 
 ### 查看物品
-    ![](https://img.onl/iqPrDB)
+![](https://img.onl/iqPrDB)
 
 ### 返回
-    ![](https://img.onl/6Y3PsE)
+![](https://img.onl/6Y3PsE)
 
 
 ## FSM
-    ![]()
+![]()
 
 ### state說明
 - start: 按下按鈕開始遊戲
