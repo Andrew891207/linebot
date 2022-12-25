@@ -1,7 +1,8 @@
 # Line Fitness
 
 ## 構想
-改編自https://t.co/UkHWBXXYQC，優化了遊戲流程，並添加成就系統，由於Line聊天紀錄容易查看，遊玩中獲得的線索可以輕易查看。
+改編自https://t.co/UkHWBXXYQC
+優化了遊戲流程，並添加成就系統，由於Line聊天紀錄容易查看，遊玩中獲得的線索可以輕易查看。
 
 ## 環境
 - Anaconda
