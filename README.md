@@ -29,7 +29,6 @@ sudo snap install ngrok
 ```shell
 ngrok http 8000
 ```
-Webhook URL 後面記得加"/webhook"
 
 6. execute app.py
 ```shell
@@ -54,7 +53,7 @@ python3 app.py
 
 
 ## FSM
-![](https://i.imgur.com/GMrkfDT.png)
+![]()
 
 ["start", "front", "left", "right", "back", 
             "front_door", "front_window",
