@@ -1,5 +1,6 @@
 import os
 import sys
+import pydot
 
 from flask import Flask, jsonify, request, abort, send_file
 from dotenv import load_dotenv
@@ -28,11 +29,11 @@ machine = TocMachine(
             "dest": "front",
             "conditions": "is_going_to_front",
         },
-        {
-            "trigger": "advance",
-            "source": "start",
-            "dest": "start",
-        },
+        # {
+        #     "trigger": "advance",
+        #     "source": "start",
+        #     "dest": "start",
+        # },
         # front->
         {
             "trigger": "advance",
@@ -350,7 +351,9 @@ def webhook_handler():
         print(f"REQUEST BODY: \n{body}")
         response = machine.advance(event)
         if response == False:
-            if machine.mode == 0:
+            if (event.message.text=='fsm'):
+                show_fsm()
+            elif machine.mode == 0:
                 send_text_message(event.reply_token, "請按按鈕或正確的輸入")
             else:
                 send_text_message(event.reply_token, "密碼錯誤")

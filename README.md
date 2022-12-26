@@ -55,7 +55,7 @@ python3 app.py
 
 
 ## FSM
-![]()
+![](https://i.imgur.com/twhvxkX.png)
 
 ### state說明
 - start: 按下按鈕開始遊戲
