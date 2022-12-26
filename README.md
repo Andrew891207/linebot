@@ -1,8 +1,8 @@
 # Line Fitness
 
 ## 構想
-改編自https://t.co/UkHWBXXYQC
-，優化了遊戲流程，並添加成就系統，由於Line聊天紀錄會記錄下來，遊玩中獲得的線索可以輕易查看。
+一個Linebot的密室逃脫遊戲，遊戲中使用2D的方式呈現，透過想像力，創造出一個3D的空間密室，遊戲內容改編自https://t.co/UkHWBXXYQC
+，並且優化了遊戲流程，添加成就系統。由於Line聊天紀錄會記錄下來，遊玩中獲得的線索可以輕易查看，獲得良好的遊戲體驗。
 
 ## QRcode以及Line id
 ![](https://i.imgur.com/HD0HHYt.png)
@@ -23,6 +23,7 @@ conda install -c alubbock pygraphviz
 3. 從`.env.sample`產生出一個`.env`，並填入以下兩個資訊
     - LINE_CHANNEL_SECRET
     - LINE_CHANNEL_ACCESS_TOKEN
+
 4. install `ngrok`
 
 ```shell
