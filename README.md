@@ -57,6 +57,8 @@ python3 app.py
 ### 返回
 ![](https://img.onl/6Y3PsE)
 
+### 輸入密碼
+![](https://i.imgur.com/nGAs7w0.png)
 
 ## FSM
 ![](https://i.imgur.com/twhvxkX.png)
