@@ -60,6 +60,9 @@ python3 app.py
 ### 輸入密碼
 ![](https://i.imgur.com/nGAs7w0.png)
 
+### 成功破關!!
+![](https://i.imgur.com/rYnOlJH.png)
+
 ## FSM
 ![](https://i.imgur.com/twhvxkX.png)
 
