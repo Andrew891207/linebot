@@ -4,6 +4,9 @@
 改編自https://t.co/UkHWBXXYQC
 ，優化了遊戲流程，並添加成就系統，由於Line聊天紀錄會記錄下來，遊玩中獲得的線索可以輕易查看。
 
+## QRcode以及Line id
+![](https://i.imgur.com/HD0HHYt.png)
+
 ## 環境
 - Anaconda
 - python Python 3.6.13
