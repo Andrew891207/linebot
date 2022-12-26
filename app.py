@@ -29,11 +29,11 @@ machine = TocMachine(
             "dest": "front",
             "conditions": "is_going_to_front",
         },
-        # {
-        #     "trigger": "advance",
-        #     "source": "start",
-        #     "dest": "start",
-        # },
+        {
+            "trigger": "advance",
+            "source": "start",
+            "dest": "start",
+        },
         # front->
         {
             "trigger": "advance",
