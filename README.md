@@ -49,13 +49,13 @@ python3 app.py
 
 ## 使用示範
 ### 開始
-![](https://img.onl/LT4tak)
+![](https://i.imgur.com/r818XGN.png)
 
 ### 查看物品
-![](https://img.onl/iqPrDB)
+![](https://i.imgur.com/4jNpIhd.png)
 
 ### 返回
-![](https://img.onl/6Y3PsE)
+![](https://i.imgur.com/MGgIgrb.png)
 
 ### 輸入密碼
 ![](https://i.imgur.com/nGAs7w0.png)
